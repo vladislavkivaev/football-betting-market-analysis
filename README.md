@@ -1,4 +1,4 @@
-# Football Betting Integrity Scanner
+# Football Betting Integrity Monitor
 
 A data pipeline and machine learning project to detect anomalies in football betting odds across European leagues — built to identify patterns consistent with match manipulation.
 
