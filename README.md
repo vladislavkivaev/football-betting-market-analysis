@@ -13,6 +13,7 @@ A data pipeline and machine learning project to detect anomalies in football bet
 In progress
 
 ## Author
-Vladislav Kivaev — [https://www.linkedin.com/in/vladislav-kivaev/] | [https://github.com/vladislavkivaev]
+Vladislav Kivaev — [LinkedIn](https://www.linkedin.com/in/vladislav-kivaev) | [GitHub](https://github.com/vladislavkivaev)
+
 
 
