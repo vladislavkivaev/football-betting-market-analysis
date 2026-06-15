@@ -5,13 +5,13 @@ from lib import components as C
 from lib import theme as T
 
 ROWS = [
-    ("H1", "Smaller leagues priced less efficiently than big ones",
+    ("H1", "Mid-tier leagues are priced less efficiently than elite leagues",
      "Pre-registered", "Not supported", "red"),
-    ("H2", "Draws mispriced (Greece under, EPL correct)",
+    ("H2", "Draws are systematically mispriced",
      "EDA-informed", "Mixed", "amber"),
-    ("H3", "Anomalies detectable; league-aware tuning rebalances flags",
+    ("H3", "Anomalous matches can be identified from odds features",
      "Pre-registered", "Supported", "green"),
-    ("H4", "Bookmaker disagreement spikes at season's end",
+    ("H4", "Bookmaker disagreement concentrates towards the end of the season",
      "Pre-registered", "Rejected", "red"),
 ]
 
@@ -19,8 +19,7 @@ ROWS = [
 def render(df):
     C.page_header(
         "Hypothesis Testing",
-        "Four predictions, written down first",
-        "Two held, two didn't — and reporting that honestly is the point.",
+        "Four predictions",
     )
 
     with C.card():
@@ -46,10 +45,10 @@ def render(df):
                             config={"displayModeBar": False})
             C.note("Grading each league against itself (per-league-season z-scoring) "
                    "roughly **halves** Greece's flag rate — 10.6% → 5.5% — pulling "
-                   "every league back toward the 5% baseline. That's the "
-                   "pre-registered criterion met.")
+                   "every league back toward the 5% baseline. "
+                   )
     with b:
-        with C.card("Why two nulls still matter"):
+        with C.card("Why results still matter"):
             st.markdown(
                 "Pre-registering H1–H4 *before* testing means the results can't be "
                 "cherry-picked. H1 and H4 failing is **evidence the method is "
@@ -59,10 +58,7 @@ def render(df):
                 "don't move together as a 'mid-tier block'.\n\n"
                 "**H4** was rejected outright: disagreement is *lowest* at season's "
                 "end, not highest.")
-            st.markdown(f"<div style='color:{T.BLUE_LIGHT};font-style:italic'>"
-                        f"H4′ (exploratory): Greece is the noisiest market in every "
-                        f"quarter — a persistent league effect, not a seasonal "
-                        f"one.</div>", unsafe_allow_html=True)
+           
 
     C.soft_divider()
     with st.expander("Effect sizes & test details (the honest reading)"):

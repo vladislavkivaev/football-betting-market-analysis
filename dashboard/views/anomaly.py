@@ -47,23 +47,23 @@ def render(df):
             st.markdown(
                 "**Drift** — how far open → close odds moved  \n"
                 "**Spread** — disagreement between bookmakers  \n"
-                "**Implied imbalance** — lopsided home/draw/away pricing  \n"
+                "**Implied imbalance** — unusual overround  \n"
                 "**Public–sharp gap** — Bet365 vs Pinnacle divergence  \n"
-                "**Reversal proxy** — price moves then snaps back")
+                "**Reversal proxy** — Bet365 vs Pinnacle drift moving opposing ways")
             st.markdown(f"<div style='color:{T.BLUE_LIGHT};font-style:italic;"
                         f"margin-top:8px'>35 features in 5 families — no team or "
                         f"player data, by design.</div>", unsafe_allow_html=True)
 
     st.write("")
-    with C.card("Flag rate by league — league-aware model"):
+    with C.card("Flag rate by league — universal model"):
         st.plotly_chart(charts.flag_rate_by_league(FLAG_RATE_UNIVERSAL),
                         width="stretch", config={"displayModeBar": False})
         C.note("Greece is flagged most — spread &amp; drift drive ~two-thirds of its "
                "score. Turkey, the priciest book, is the *least*-flagged: expensive "
-               "but orderly. Unusual is not an accusation.")
+               "but orderly.")
 
     st.write("")
-    with C.card("Two models, one A/B test"):
+    with C.card("Two models"):
         cc1, cc2 = st.columns(2)
         with cc1:
             st.markdown(

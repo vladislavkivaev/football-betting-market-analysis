@@ -10,12 +10,12 @@ def render(df):
     C.page_header(
         "Betting 101",
         "How odds work &amp; how books make money",
-        "Worked on the World Cup 2026 opener — Mexico vs South Africa.",
+        "World Cup 2026 opener example — Mexico vs South Africa (Bet365).",
     )
 
     left, right = st.columns([1.25, 1])
     with left:
-        with C.card("Reading the odds — one game, three formats"):
+        with C.card("Reading the odds"):
             st.markdown(
                 "Bookmakers post a number for each outcome. **Decimal** odds are what "
                 "this dataset uses; **US** odds are the American style; the **implied "
@@ -28,7 +28,7 @@ def render(df):
             })
             st.markdown(
                 "<div class='note'>Decimal 1.48 = stake × 1.48 back. "
-                "US −208 = bet 208 to win 100. Implied % = 1 ÷ decimal odds.</div>",
+                "US −208 = bet 208 to win 100, US +333 = profit 333 on a bet 100. Implied % = 1 ÷ decimal odds.</div>",
                 unsafe_allow_html=True)
     with right:
         with C.card("The catch: it sums to 106%"):
@@ -46,10 +46,10 @@ def render(df):
 
     C.soft_divider()
 
-    with C.card("Real overround in this data — median fee by league (closing odds)"):
+    with C.card("Real overround in this data — median fee by league (Bet 365 closing odds)"):
         st.markdown(
             "<div class='note'>Across 8,915 league matches the fee sits in the same "
-            "5–7% range as that World Cup game. Turkey runs the priciest book; the two "
+            "5–7% range as that World Cup game. Turkey is priciest market, the two "
             "elite leagues are the cheapest.</div>", unsafe_allow_html=True)
         st.plotly_chart(charts.bar_overround(OVERROUND_B365), width="stretch",
                         config={"displayModeBar": False})
@@ -60,18 +60,14 @@ def render(df):
         with C.card("Mini-glossary"):
             st.markdown(
                 "**Favourite / longshot** — the low-odds vs high-odds outcome.  \n"
-                "**Spread** — `max − avg` odds across books: how much they disagree.  \n"
-                "**Opening vs closing** — first price posted vs the final one.  \n"
-                "**Drift** — how far a price moved from open to close.  \n"
-                "**Elite vs mid-tier** — big leagues (Bundesliga, EPL) vs "
-                "smaller ones (Turkey, Greece).")
+                "**Spread** — 'max − avg' odds across books: how much they disagree.  \n"
+                "**Opening vs closing odds** — first price posted vs the final one.  \n"
+                "**Drift** — how far a price moved from open to close."
+                )
     with g2:
         with C.card("Why the fee matters here"):
             st.markdown(
-                "The overround reframes the whole project: this isn't about "
-                "*predicting* football, it's about studying a **market with a built-in "
-                "fee**.\n\n"
-                "A book that's confident posts a *tighter* margin; an uncertain or thin "
-                "market posts a *wider* one. So the fee — and how much books disagree "
+                "A confident bookmaker posts a tighter margin. An uncertain or thin "
+                "market posts a wider one. So the fee — and how much books disagree "
                 "on it — becomes a measurable signal for the efficiency and anomaly "
                 "work in the next sections.")

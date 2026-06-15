@@ -10,7 +10,7 @@ def render(df):
     C.page_header(
         "Overview",
         "Football Betting Market Efficiency Monitor",
-        "Can you bit bookmakers? A market-efficiency study with anomaly screening — seven seasons of football odds.",
+        "Can you beat bookmakers? A market-efficiency study with anomaly screening — seven seasons of football odds.",
     )
 
     c1, c2, c3 = st.columns(3)
@@ -75,16 +75,17 @@ def render(df):
 
     left, right = st.columns([1.15, 1])
     with left:
-        with st.expander("What this is — and what it is not"):
+        with st.expander("Anomaly screening"):
             st.markdown(
-                "This project studies how an efficient market with a built-in fee "
-                "behaves, and screens for matches whose odds behave **unlike their "
-                "league**. It is framed as a *market-efficiency study with anomaly "
-                "screening*, not a match-fixing detector.\n\n"
-                "There are no ground-truth fixing labels, so the honest output is a "
-                "**differential flagging rate** — never a false-positive rate or an "
-                "accusation. The same way professional integrity monitors operate: "
-                "*unusual ≠ rigged.*")
+                "Alongside measuring betting-market efficiency, this project applies "
+                "unsupervised anomaly detection to identify matches whose odds behave "
+                "**unusually relative to their own league**. Signals include odds "
+                "movement, bookmaker disagreement, pricing inefficiencies, and "
+                "differences between public and sharp bookmakers.\n\n"
+                "The analysis then compares different anomaly-screening approaches "
+                "across leagues to examine how market structure influences detection "
+                "outcomes. Flagged matches are interpreted as **statistically unusual "
+                "market events**, not evidence of match-fixing or wrongdoing.")
     with right:
         with st.expander("The four hypotheses"):
             

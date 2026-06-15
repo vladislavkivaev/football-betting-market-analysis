@@ -21,8 +21,8 @@ def render(df):
     C.page_header(
         "Match Dashboard",
         "Explore any game in the dataset",
-        "Filter the 8,915 matches, then open one to see why the model did — or "
-        "didn't — flag it.",
+        "Filter the 8,915 matches, then open one to see why the model did or "
+        "didn't flag it.",
     )
 
     rail, main = st.columns([1, 2.5], gap="large")
@@ -65,7 +65,10 @@ def render(df):
         else:
             f = f[ips >= 1.07]
 
-    f = f.sort_values("anomaly_score", ascending=False).reset_index(drop=True)
+    if flagged_only:
+        f = f.sort_values("anomaly_score", ascending=False).reset_index(drop=True)
+    else:
+        f = f.sort_values("match_date", ascending=False).reset_index(drop=True)
 
     # --------------------------------- TABLE ------------------------------- #
     with main:
@@ -75,7 +78,7 @@ def render(df):
                             "loosen one above.</div>", unsafe_allow_html=True)
             return
 
-        view = f.head(300).copy()
+        view = f.copy()
         view["Match"] = view["home_team"] + " – " + view["away_team"]
         view["Date"] = pd.to_datetime(view["match_date"]).dt.strftime("%Y-%m-%d")
         view["Flag"] = view["if_u_flag"].map({True: "🚩", False: ""})
@@ -89,8 +92,9 @@ def render(df):
                 table, hide_index=True, width="stretch", height=300,
                 on_select="rerun", selection_mode="multi-row",
                 column_config={"Score": st.column_config.NumberColumn(format="%.2f")})
-            C.note("Tap rows to select one or more matches. Sorted by anomaly score "
-                   "(most unusual first).")
+            sort_note = ("Sorted by anomaly score (most unusual first)." if flagged_only
+                         else "Sorted by date (most recent first).")
+            C.note(f"Tap rows to select one or more matches. {sort_note}")
 
         selected_rows = event.selection.rows if event and event.selection else []
         if not selected_rows:
@@ -167,9 +171,9 @@ def render(df):
         f"<div class='card'><h3>How to read this · scope &amp; limitations</h3>"
         f"<div class='muted'>"
         f"• A flag means a match's odds behave unlike its league — it is a screening "
-        f"signal, not proof of anything.<br>"
+        f"signal.<br>"
         f"• There are no ground-truth fixing labels, so this reports differential "
         f"flagging rates, never false-positive rates.<br>"
         f"• \u201cUnusual \u2260 rigged.\u201d The honest output is \u201chere is "
-        f"where a human should look\u201d — the same way real integrity monitors "
+        f"where a human should look\u201d — the same way real models "
         f"operate.</div></div>", unsafe_allow_html=True)
