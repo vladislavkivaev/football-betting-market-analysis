@@ -68,6 +68,6 @@ def render(df):
         with C.card("Why the fee matters here"):
             st.markdown(
                 "A confident bookmaker posts a tighter margin. An uncertain or thin "
-                "market posts a wider one. So the fee — and how much books disagree "
-                "on it — becomes a measurable signal for the efficiency and anomaly "
+                "market posts a wider one. So the fee and how much books disagree "
+                "on it becomes a measurable signal for the efficiency and anomaly "
                 "work in the next sections.")

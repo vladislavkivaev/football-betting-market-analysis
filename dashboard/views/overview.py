@@ -10,7 +10,7 @@ def render(df):
     C.page_header(
         "Overview",
         "Football Betting Market Efficiency Monitor",
-        "Can you beat bookmakers? A market-efficiency study with anomaly screening — seven seasons of football odds.",
+        "Can you beat bookmakers? A market-efficiency study with anomaly screening.",
     )
 
     c1, c2, c3 = st.columns(3)
@@ -68,7 +68,7 @@ def render(df):
     st.write("")
 
     st.markdown(
-        "**Methods:** Data Extract → EDA → 35 engineered features → Isolation Forest → "
+        "**Methods:** EDA → 35 engineered features → Isolation Forest → "
         "SHAP → Hypothesis testing")
 
     C.soft_divider()

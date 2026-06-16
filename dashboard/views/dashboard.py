@@ -159,8 +159,8 @@ def render(df):
             dom = row.get("dom_family_u", "spread")
             if flagged:
                 C.note(f"Dominant signal: **{dom}**. The odds for this game behaved "
-                       f"unlike others in {row['league_name']} — that's why it "
-                       f"surfaced. A screen, not a verdict.")
+                       f"unlike others in the dataset — that's why it "
+                       f"surfaced.")
             else:
                 C.note("This match scored below the flag threshold — its odds behaved "
                        "normally for its league.")
@@ -170,7 +170,7 @@ def render(df):
     st.markdown(
         f"<div class='card'><h3>How to read this · scope &amp; limitations</h3>"
         f"<div class='muted'>"
-        f"• A flag means a match's odds behave unlike its league — it is a screening "
+        f"• A flag means a match's odds behave unlike the dataset as a whole — it is a screening "
         f"signal.<br>"
         f"• There are no ground-truth fixing labels, so this reports differential "
         f"flagging rates, never false-positive rates.<br>"

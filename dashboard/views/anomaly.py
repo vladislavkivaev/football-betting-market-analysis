@@ -23,12 +23,11 @@ def render(df):
             C.note("Most matches look normal (blue). The long red tail — the top ~5% "
                    "by score — is what gets flagged for a closer look.")
     with top_r:
-        with C.card("SHAP — what drives a flag"):
+        with C.card("SHAP — what drives a flag in Greece"):
             st.plotly_chart(charts.shap_drivers(), width="stretch",
                             config={"displayModeBar": False})
             C.note("Spread and drift together account for **~two-thirds** of the "
-                   "model's decisions — the same two signals the EDA flagged for "
-                   "Greece.")
+                   "model's decisions in Greece.")
 
     st.write("")
     mid_l, mid_r = st.columns([1.4, 1])
@@ -47,7 +46,7 @@ def render(df):
             st.markdown(
                 "**Drift** — how far open → close odds moved  \n"
                 "**Spread** — disagreement between bookmakers  \n"
-                "**Implied imbalance** — unusual overround  \n"
+                "**Implied imbalance** — abnormal overround  \n"
                 "**Public–sharp gap** — Bet365 vs Pinnacle divergence  \n"
                 "**Reversal proxy** — Bet365 vs Pinnacle drift moving opposing ways")
             st.markdown(f"<div style='color:{T.BLUE_LIGHT};font-style:italic;"
@@ -58,9 +57,9 @@ def render(df):
     with C.card("Flag rate by league — universal model"):
         st.plotly_chart(charts.flag_rate_by_league(FLAG_RATE_UNIVERSAL),
                         width="stretch", config={"displayModeBar": False})
-        C.note("Greece is flagged most — spread &amp; drift drive ~two-thirds of its "
-               "score. Turkey, the priciest book, is the *least*-flagged: expensive "
-               "but orderly.")
+        C.note("Greece is flagged most. Spread &amp; drift drive ~two-thirds of its "
+               "score. Turkey is the priciest book and is flagged the least. "
+               )
 
     st.write("")
     with C.card("Two models"):
@@ -85,9 +84,9 @@ def render(df):
     st.markdown(
         f"<div class='card' style='border-color:{T.AMBER}'>"
         f"<h3 style='color:{T.AMBER}'>⚖️ No ground-truth labels exist.</h3>"
-        f"<div class='muted'>So this reports <b>differential flagging rates</b> — "
-        f"never false-positive rates or claims of wrongdoing. A flag means a match's "
-        f"odds behaved unlike its league; it is a screening signal, not a verdict. "
-        f"The honest output is \u201chere is where a human should look\u201d — the "
-        f"same way real integrity monitors operate. <b>Unusual \u2260 rigged.</b>"
+        f"<div class='muted'>This reports <b>differential flagging rates</b> "
+        f"not false-positive rates or claims of wrongdoing. A flag means a match's "
+        f"odds behaved unlike the others in the dataset, it is a screening signal not a verdict. "
+        f"The honest output is \u201chere is where a human should look\u201d - the "
+        f"same way real anomaly detection systems operate. <b>Unusual \u2260 rigged.</b>"
         f"</div></div>", unsafe_allow_html=True)

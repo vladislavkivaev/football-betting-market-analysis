@@ -12,7 +12,7 @@ ROWS = [
     ("H3", "Anomalous matches can be identified from odds features",
      "Pre-registered", "Supported", "green"),
     ("H4", "Bookmaker disagreement concentrates towards the end of the season",
-     "Pre-registered", "Rejected", "red"),
+     "Pre-registered", "Not Supported", "red"),
 ]
 
 
@@ -51,17 +51,17 @@ def render(df):
         with C.card("Why results still matter"):
             st.markdown(
                 "Pre-registering H1–H4 *before* testing means the results can't be "
-                "cherry-picked. H1 and H4 failing is **evidence the method is "
-                "honest** — not tuned after the fact to tell a tidy story.\n\n"
+                "cherry-picked. H1 and H4 failing is evidence the method is "
+                "honest not tuned after the fact to tell a tidy story.\n\n"
                 "**H1** turned out to be a *league*-level effect, not a tier one: "
-                "Turkey is the overround outlier, Greece the spread outlier — they "
+                "Turkey is the overround outlier, Greece the spread outlier they "
                 "don't move together as a 'mid-tier block'.\n\n"
                 "**H4** was rejected outright: disagreement is *lowest* at season's "
                 "end, not highest.")
            
 
     C.soft_divider()
-    with st.expander("Effect sizes & test details (the honest reading)"):
+    with st.expander("Effect sizes & test details"):
         st.markdown(
             "- **H1** — pooled KS significant on 4/4 efficiency features (p ≈ 0), but "
             "*within*-tier pairs are also significant, so the tier framing fails. "
