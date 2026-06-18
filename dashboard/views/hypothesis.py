@@ -3,23 +3,25 @@ import streamlit as st
 from lib import charts
 from lib import components as C
 from lib import theme as T
+from lib.data import OVERROUND_B365
 
 ROWS = [
-    ("H1", "Mid-tier leagues are priced less efficiently than elite leagues",
+    ("H1", "Smaller leagues priced less efficiently than big ones",
      "Pre-registered", "Not supported", "red"),
-    ("H2", "Draws are systematically mispriced",
+    ("H2", "Draws mispriced (Greece under, EPL correct)",
      "EDA-informed", "Mixed", "amber"),
-    ("H3", "Anomalous matches can be identified from odds features",
+    ("H3", "Anomalies detectable; league-aware tuning rebalances flags",
      "Pre-registered", "Supported", "green"),
-    ("H4", "Bookmaker disagreement concentrates towards the end of the season",
-     "Pre-registered", "Not Supported", "red"),
+    ("H4", "Bookmaker disagreement spikes at season's end",
+     "Pre-registered", "Rejected", "red"),
 ]
 
 
 def render(df):
     C.page_header(
         "Hypothesis Testing",
-        "Four predictions",
+        "Four predictions, written down first",
+        "Two held, two didn't — and reporting that honestly is the point.",
     )
 
     with C.card():
@@ -38,40 +40,101 @@ def render(df):
             st.write("")
 
     st.write("")
+    st.markdown(
+        "<div class='note'>Click a hypothesis below to see why, in plain "
+        "terms</div>", unsafe_allow_html=True)
+    st.write("")
+
+    row1_l, row1_r = st.columns(2)
+    with row1_l:
+        with st.expander("H1 — Smaller leagues priced less efficiently than big ones",
+                         expanded=False):
+            st.plotly_chart(charts.bar_overround(OVERROUND_B365), width="stretch",
+                            config={"displayModeBar": False})
+            C.note("If H1 held, you'd expect a clean elite/mid-tier split: both "
+                   "Bundesliga and EPL low, both Turkey and Greece high. Instead "
+                   "**Turkey (6.8%) is the standalone outlier** and Greece (6.2%) "
+                   "sits closer to the elite pair than to Turkey. The pattern is "
+                   "league-specific, not tier-level — so H1 isn't supported as "
+                   "originally framed.")
+    with row1_r:
+        with st.expander("H2 — Draws mispriced (Greece under, EPL correct)",
+                         expanded=False):
+            st.plotly_chart(charts.draw_mispricing(), width="stretch",
+                            config={"displayModeBar": False})
+            C.note("EPL's implied and realised draw rates are nearly identical "
+                   "(23.8% vs 23.6%) — correctly priced, as predicted. Greece's "
+                   "gap is the widest (25.7% → 27.2%, draws happen **more** than "
+                   "the market expects). The direction matches H2, but with "
+                   "only 7 league-seasons to test on, the gap isn't large "
+                   "enough to call statistically significant for every league "
+                   "— hence *mixed*, not a clean win.")
+
+    row2_l, row2_r = st.columns(2)
+    with row2_l:
+        with st.expander("H3 — Anomalies detectable; league-aware tuning "
+                         "rebalances flags", expanded=False):
+            st.plotly_chart(charts.h3_winbar(), width="stretch",
+                            config={"displayModeBar": False}, key="h3_expander_chart")
+            C.note("The universal model over-flags Greece at 10.6% — more than "
+                   "double the 5% target. Re-scoring matches against their own "
+                   "league's history instead of the whole dataset pulls that "
+                   "down to 5.5%, right at baseline. This is the cleanest result "
+                   "of the four: the pre-registered threshold (cut the gap by "
+                   "at least half) was met with room to spare.")
+    with row2_r:
+        with st.expander("H4 — Bookmaker disagreement spikes at season's end",
+                         expanded=False):
+            st.plotly_chart(charts.h4_seasonal_trend(), width="stretch",
+                            config={"displayModeBar": False})
+            C.note("Greece is consistently the noisiest market all season, but "
+                   "its spread **peaks mid-season (Q3) and falls toward the "
+                   "end (Q5)** — the opposite of what H4 predicted. The other "
+                   "three leagues stay essentially flat throughout. Disagreement "
+                   "doesn't spike at season's end anywhere in this data, so H4 "
+                   "is rejected as framed.")
+
+    st.write("")
     a, b = st.columns([1, 1.1])
     with a:
         with C.card("H3 — the one clean win (Greece flag rate)"):
             st.plotly_chart(charts.h3_winbar(), width="stretch",
-                            config={"displayModeBar": False})
+                            config={"displayModeBar": False}, key="h3_card_chart")
             C.note("Grading each league against itself (per-league-season z-scoring) "
                    "roughly **halves** Greece's flag rate — 10.6% → 5.5% — pulling "
-                   "every league back toward the 5% baseline. "
-                   )
+                   "every league back toward the 5% baseline. That's the "
+                   "pre-registered criterion met.")
     with b:
-        with C.card("Why results still matter"):
+        with C.card("Why two nulls still matter"):
             st.markdown(
                 "Pre-registering H1–H4 *before* testing means the results can't be "
-                "cherry-picked. H1 and H4 failing is evidence the method is "
-                "honest not tuned after the fact to tell a tidy story.\n\n"
+                "cherry-picked. H1 and H4 failing is **evidence the method is "
+                "honest** — not tuned after the fact to tell a tidy story.\n\n"
                 "**H1** turned out to be a *league*-level effect, not a tier one: "
-                "Turkey is the overround outlier, Greece the spread outlier they "
+                "Turkey is the overround outlier, Greece the spread outlier — they "
                 "don't move together as a 'mid-tier block'.\n\n"
                 "**H4** was rejected outright: disagreement is *lowest* at season's "
                 "end, not highest.")
-           
+            st.markdown(f"<div style='color:{T.BLUE_LIGHT};font-style:italic'>"
+                        f"H4′ (exploratory): Greece is the noisiest market in every "
+                        f"quarter — a persistent league effect, not a seasonal "
+                        f"one.</div>", unsafe_allow_html=True)
 
     C.soft_divider()
-    with st.expander("Effect sizes & test details"):
+    with st.expander("Effect sizes & test details (the honest reading)"):
         st.markdown(
-            "- **H1** — pooled KS significant on 4/4 efficiency features (p ≈ 0), but "
-            "*within*-tier pairs are also significant, so the tier framing fails. "
+            "- **H1**: pooled KS is significant on 4/4 efficiency features (p ≈ 0), "
+            "but within-tier pairs are also significant, so the tier framing fails. "
             "Overround ordering: T1 1.068 > G1 1.062 > D1 1.056 > E0 1.055.\n"
-            "- **H2** — mean draw gaps are real and substantive (D1 +6.7%, G1 +6.0%, "
-            "EPL −0.8%) and EPL-correctly-priced is confirmed, but with only n=7 "
-            "league-seasons the Holm-corrected MWU doesn't clear significance — hence "
-            "*mixed*. D1 is significant vs zero (p=0.020, |r|=0.71).\n"
-            "- **H3** — flag-rate gap reduction exceeds the >half threshold; flagged "
-            "vs unflagged separate strongly on spread (max closing spread KS D=0.896, "
-            "|r|=0.978).\n"
-            "- **H4** — ANOVA technically significant (n-artefact, η²<0.01) but "
-            "Kruskal-Wallis not; both effect sizes negligible. Rejected as framed.")
+            "- **H2**: mean draw gaps are real (D1 +6.7%, G1 +6.0%, T1 +2.9%, "
+            "EPL −0.8%) and EPL is confirmed correctly priced, but at n=7 "
+            "league-seasons the Holm-corrected test falls short, so the threshold "
+            "is not met. D1 alone is significant vs zero (p=0.020, |r|=0.71).\n"
+            "- **H3**: the binding, pre-registered result (met in 03) is a ~48% "
+            "flag-rate gap reduction (G1 0.106 to 0.055), clearing the half "
+            "threshold. A separate, circularity-caveated check finds flagged "
+            "matches separate strongly on spread (KS D=0.896, |r|=0.978), but "
+            "that is internal consistency only.\n"
+            "- **H4**: ANOVA is technically significant (an n-artefact, "
+            "η²<0.01) but Kruskal-Wallis is not, and both effect sizes are "
+            "negligible, so the hypothesis is rejected as framed.")
